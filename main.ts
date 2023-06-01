@@ -1,9 +1,8 @@
 import { MarkdownRenderer, Plugin, TFile, TFolder, View } from 'obsidian';
 import * as path from 'path';
 
-// Remember to rename these classes and interfaces!
 
-export default class MyPlugin extends Plugin {
+export default class IncludeFilePlugin extends Plugin {
 	async onload() {
 		this.registerMarkdownCodeBlockProcessor("include", async (source, el, ctx) => {
 			let markdown: string;
@@ -54,6 +53,7 @@ export default class MyPlugin extends Plugin {
 				include_path = "unresolved";
 			}
 
+			// Render the content or abort with a simple error message if there is no active view.
 			const view = this.app.workspace.getActiveViewOfType(View);
 			if (view == null) {
 				el.createSpan({text: "There is no active view for rendering markdown."});
