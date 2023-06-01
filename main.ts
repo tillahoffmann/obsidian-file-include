@@ -37,7 +37,7 @@ export default class IncludeFilePlugin extends Plugin {
 
 				// Determine the language if any.
 				const startLine = sectionInfo.text.split(/\n/)[sectionInfo.lineStart];
-				const lang = startLine.match(/include(?::(?<lang>\w+))?/)?.groups?.lang;
+				const lang = startLine.match(/include(?:[:\s]+(?<lang>\w+))?/)?.groups?.lang;
 
 				// Prepare the markdown content.
 				markdown = ["```", lang, "\n", content.trim(), "\n```"].join("");
