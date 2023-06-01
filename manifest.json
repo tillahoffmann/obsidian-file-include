@@ -4,8 +4,7 @@
 	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
 	"description": "Include files in Obsidian.",
-	"author": "Obsidian",
-	"authorUrl": "https://obsidian.md",
-	"fundingUrl": "https://obsidian.md/pricing",
+	"author": "Till Hoffmann",
+	"authorUrl": "https://tillahoffmann.github.io",
 	"isDesktopOnly": false
 }
