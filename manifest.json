@@ -1,9 +1,9 @@
 {
-	"id": "obsidian-file-include-plugin",
-	"name": "File Include Plugin",
+	"id": "file-include",
+	"name": "File Include",
 	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
-	"description": "Include files in Obsidian.",
+	"description": "Include or embed files in Obsidian markdown.",
 	"author": "Till Hoffmann",
 	"authorUrl": "https://tillahoffmann.github.io",
 	"isDesktopOnly": false
