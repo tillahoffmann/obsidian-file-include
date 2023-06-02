@@ -1,5 +1,28 @@
 import { MarkdownRenderer, Plugin, TFile, TFolder, View } from 'obsidian';
-import * as path from 'path';
+
+
+function resolvePath(sourcePath: string, targetPath: string): string {
+	// This is an absolute path; return it as is after popping the leading slash.
+	if (targetPath.startsWith("/")) {
+		return targetPath.substring(1);
+	}
+	// Resolve the path relative to the source document.
+	const parts = sourcePath.split("/");
+	// Remove the source filename to get the parent directory.
+	parts.pop();
+	for (const part of targetPath.split("/")) {
+		if (part == "..") {
+			if (parts.pop() == undefined) {
+				throw Error(`"${targetPath}" could not be resolved.`);
+			}
+		} else if (part == ".") {
+			// Do nothing.
+		} else {
+			parts.push(part);
+		}
+	}
+	return parts.join("/");
+}
 
 
 export default class IncludeFilePlugin extends Plugin {
@@ -15,14 +38,7 @@ export default class IncludeFilePlugin extends Plugin {
 				}
 
 				// Resolve the file relative to the current document.
-				include_path = source.trim();
-				if (path.isAbsolute(include_path)) {
-					// Remove leading `/` because Obsidian resolves relative to the vault root.
-					include_path = include_path.substring(1);
-				} else {
-					// Resolve relative to the current file.
-					include_path = path.join(path.dirname(ctx.sourcePath), include_path);
-				}
+				include_path = resolvePath(ctx.sourcePath, source.trim());
 
 				// Load the content.
 				const include_file = this.app.vault.getAbstractFileByPath(include_path);
