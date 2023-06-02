@@ -43,5 +43,5 @@ Show an error message due to using too many relative parts.
 Demonstrate that we can handle complex paths. This should resolve to `test_hello.py` in the `tests` directory.
 
 ```include python
-missing-child/../../tests/./test_hello.py
+missing-child/../../tests/.///test_hello.py
 ```

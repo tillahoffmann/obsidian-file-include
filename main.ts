@@ -1,7 +1,9 @@
-import { MarkdownRenderer, Plugin, TFile, TFolder, View } from 'obsidian';
+import { MarkdownRenderer, Plugin, TFile, TFolder, View, normalizePath } from 'obsidian';
 
 
 function resolvePath(sourcePath: string, targetPath: string): string {
+	// Use forward slash for paths on all platforms.
+	targetPath = targetPath.replace("\\", "/");
 	// This is an absolute path; return it as is after popping the leading slash.
 	if (targetPath.startsWith("/")) {
 		return targetPath.substring(1);
@@ -15,13 +17,13 @@ function resolvePath(sourcePath: string, targetPath: string): string {
 			if (parts.pop() == undefined) {
 				throw Error(`"${targetPath}" could not be resolved.`);
 			}
-		} else if (part == ".") {
+		} else if (part == "." || !part) {
 			// Do nothing.
 		} else {
 			parts.push(part);
 		}
 	}
-	return parts.join("/");
+	return normalizePath(parts.join("/"));
 }
 
 
