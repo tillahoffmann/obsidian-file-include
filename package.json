@@ -1,6 +1,6 @@
 {
 	"name": "file-include",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Include or embed files in Obsidian markdown.",
 	"main": "main.js",
 	"scripts": {
