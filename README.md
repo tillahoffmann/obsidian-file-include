@@ -24,4 +24,4 @@ hello.py
 hello.py
 ```
 
-Paths are resolved relative to the markdown file. Prefix the path with `/` to resolve relative to the vault root.
+Paths are resolved relative to the markdown file. Prefix the path with `@/` to resolve relative to the vault root.
