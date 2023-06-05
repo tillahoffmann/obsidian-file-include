@@ -1,30 +1,5 @@
 import { MarkdownRenderer, Plugin, TFile, TFolder, View, normalizePath } from 'obsidian';
-
-
-function resolvePath(sourcePath: string, targetPath: string): string {
-	// Use forward slash for paths on all platforms.
-	targetPath = targetPath.replace("\\", "/");
-	// This is an absolute path; return it as is after popping the leading slash.
-	if (targetPath.startsWith("/")) {
-		return targetPath.substring(1);
-	}
-	// Resolve the path relative to the source document.
-	const parts = sourcePath.split("/");
-	// Remove the source filename to get the parent directory.
-	parts.pop();
-	for (const part of targetPath.split("/")) {
-		if (part == "..") {
-			if (parts.pop() == undefined) {
-				throw Error(`"${targetPath}" could not be resolved.`);
-			}
-		} else if (part == "." || !part) {
-			// Do nothing.
-		} else {
-			parts.push(part);
-		}
-	}
-	return normalizePath(parts.join("/"));
-}
+import { resolvePath } from './util';
 
 
 export default class IncludeFilePlugin extends Plugin {
@@ -40,7 +15,7 @@ export default class IncludeFilePlugin extends Plugin {
 				}
 
 				// Resolve the file relative to the current document.
-				include_path = resolvePath(ctx.sourcePath, source.trim());
+				include_path = normalizePath(resolvePath(source.trim(), ctx.sourcePath));
 
 				// Load the content.
 				const include_file = this.app.vault.getAbstractFileByPath(include_path);

@@ -16,7 +16,13 @@ Show a file in the parent directory with syntax highlighting.
 ../styles.css
 ```
 
-Show a file with absolute path with syntax highlighting.
+Show a file with absolute path with syntax highlighting using `@/` syntax.
+
+```include python
+@/hello.py
+```
+
+Show an error message for leading slash paths.
 
 ```include python
 /hello.py
