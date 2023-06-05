@@ -15,7 +15,7 @@ export default class IncludeFilePlugin extends Plugin {
 				}
 
 				// Resolve the file relative to the current document.
-				include_path = normalizePath(resolvePath(source.trim(), ctx.sourcePath));
+				include_path = normalizePath(resolvePath(normalizePath(source.trim()), ctx.sourcePath));
 
 				// Load the content.
 				const include_file = this.app.vault.getAbstractFileByPath(include_path);
