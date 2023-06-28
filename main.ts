@@ -51,7 +51,7 @@ export default class IncludeFilePlugin extends Plugin {
 			if (view == null) {
 				el.createSpan({text: "There is no active view for rendering markdown."});
 			} else {
-				await MarkdownRenderer.renderMarkdown(markdown, el, include_path, view);
+				await MarkdownRenderer.renderMarkdown(markdown, el, ctx.sourcePath, view);
 			}
 		});
 	}
