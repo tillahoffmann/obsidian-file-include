@@ -14,19 +14,62 @@ export default class IncludeFilePlugin extends Plugin {
 					throw Error("Could not retrieve section information.");
 				}
 
-				// Resolve the file relative to the current document.
-				include_path = normalizePath(resolvePath(normalizePath(source.trim()), ctx.sourcePath));
+				let content : string = "";
+				const src : string = source.trim();
 
-				// Load the content.
-				const include_file = this.app.vault.getAbstractFileByPath(include_path);
-				if (include_file == null) {
-					throw Error(`"${source}" could not be found.`);
-				} else if (include_file instanceof TFolder) {
-					throw Error(`"${source}" is a folder.`);
-				} else if (!(include_file instanceof TFile)) {
-					throw Error(`"${source}" is not a file.`);
+				if (src.startsWith("http://") || src.startsWith("https://")) {
+
+					// Load the content from a URL.
+					// The server must have CORS enabled.
+
+					let response: Response;							// HTTP Response object.
+					let httperr: string | undefined = undefined;	// HTTP error message. If any.
+
+					try {
+						// Fetch the file using GER and a custom User-Agent.
+						response = await fetch(src, {
+							method: "GET",
+							headers: {
+								"User-Agent": "Obsidian Include File Plugin",
+								"Accept": "*/*"
+							},
+						});
+
+						if (!response.ok) {
+							// load httperr message with status code and status text.
+							httperr = `"${src}" could not be loaded. ${response.status} ${response.statusText}.`;
+						} else {
+							// load content with the response text.
+							content = await response.text();
+						}
+						
+					} catch (error) {
+						// Here we end up if there is no network connection or the CORS headers are not set.
+						console.log(error);
+						httperr = `"${src}" could not be loaded.\n${error}. Network or CORS headers problem.`;
+					}
+
+					if (httperr !== undefined) {
+						throw Error(httperr);
+					}
+
+				} else {
+					
+					// Resolve the file relative to the current document.
+					include_path = normalizePath(resolvePath(normalizePath(src), ctx.sourcePath));
+
+					// Load the content.
+					const include_file = this.app.vault.getAbstractFileByPath(include_path);
+					if (include_file == null) {
+						throw Error(`"${source}" could not be found.`);
+					} else if (include_file instanceof TFolder) {
+						throw Error(`"${source}" is a folder.`);
+					} else if (!(include_file instanceof TFile)) {
+						throw Error(`"${source}" is not a file.`);
+					}
+
+					content = await this.app.vault.read(include_file);
 				}
-				const content = await this.app.vault.read(include_file);
 
 				// Determine the language if any.
 				const startLine = sectionInfo.text.split(/\n/)[sectionInfo.lineStart];
